@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import org.apache.spark.api.java.function.*;
@@ -31,30 +32,16 @@ import org.apache.livy.*;
             return v1 + v2;
         }
         public static void main(String[] args) {
-            //String livyUrl = "http://localhost:8998";
-            String thisjar = "/home/nima/IdeaProjects/livytest/out/artifacts/livytest_jar/livytest.jar";
-            LivyClient client = null;
-            try {
-                URI livuri = URI.create("http://localhost:8998");
-                client = new LivyClientBuilder()
-                        .setURI(livuri)
-                        .build();
-            }  catch (IOException e) {
-                e.printStackTrace();
+
+            ServiceLoader<LivyClientFactory> loader = ServiceLoader.load(LivyClientFactory.class, PiJob.class.getClassLoader());
+            System.out.println(loader);
+            Iterator iterator =  loader.iterator();
+            while (iterator.hasNext()){
+                System.out.println(iterator.next());
+                System.out.println("***");
             }
-            try {
-                System.err.printf("Uploading %s to the Spark context...\n", thisjar);
-                client.uploadJar(new File(thisjar)).get();
-                System.err.printf("Running PiJob with %d samples...\n",10);
-                double pi = client.submit(new PiJob(10)).get();
-                System.out.println("Pi is roughly: " + pi);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } finally {
-                client.stop(true);
-            }
+
+
         }
     }
 
