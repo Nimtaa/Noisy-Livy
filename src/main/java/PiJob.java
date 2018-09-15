@@ -1,9 +1,4 @@
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import org.apache.spark.api.java.function.*;
 import org.apache.livy.*;
 
@@ -32,7 +27,6 @@ import org.apache.livy.*;
             return v1 + v2;
         }
         public static void main(String[] args) {
-
             ServiceLoader<LivyClientFactory> loader = ServiceLoader.load(LivyClientFactory.class, PiJob.class.getClassLoader());
             System.out.println(loader);
             Iterator iterator =  loader.iterator();
@@ -40,11 +34,8 @@ import org.apache.livy.*;
                 System.out.println(iterator.next());
                 System.out.println("***");
             }
-
-
         }
     }
-
 
 
 
